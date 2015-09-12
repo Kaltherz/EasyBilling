@@ -1,0 +1,207 @@
+<?include 'header.php';?>
+
+<!---                  	CSS Template     -->
+<link href="../src/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../src/dist/css/sb-admin-2.css" rel="stylesheet">
+<link href="../src/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<!--              		Fin Css template  -->
+
+<!--                    Comienso pagina   -->
+<h1 class="page-header">Consulta de Datos Personales</h1>
+
+
+<!--                    FInal pagina     -->
+
+
+<!--      	 			JS Template      -->
+<script src="../src/dist/js/sb-admin-2.js"></script>
+<script src="../src/js/jquery-2.1.4.min.js"></script>
+<script src="../src/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!--                 Fin JS Template      -->
+
+<!--                  JS Pagina 		  -->
+<script type="text/javascript">
+$('.navbar-default.sidebar').height($('#page-wrapper').height()); // JS para que la barra izquierda sea igual al tamaño  de la pagina
+</script>
+
+<script>
+    $( function() {
+        $("#datos_a_consultar").submit( function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: "POST",
+                url: "http://majestics.bugs3.com/sif/class/procesarConsulta.php",
+                data: formData,
+                success: function(response){
+                    //console.log(response);
+                    $("#content").html(response);
+                }
+            });
+        })
+    });
+</script>
+<script type="text/javascript" src="http://majestics.bugs3.com/src/js/llqrcode.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="http://majestics.bugs3.com/src/js/webqr.js"></script>
+<style type="text/css">
+    img{
+        border:0;
+    }
+    #main{
+        margin: 15px auto;
+        background:white;
+        overflow: auto;
+        width: 100%;
+    }
+    #mainbody{
+        background: white;
+        width:100%;
+        display:none;
+    }
+    #v{
+        width:320px;
+        height:240px;
+    }
+    #qr-canvas{
+        display:none;
+    }
+    #qrfile{
+        width:320px;
+        height:240px;
+    }
+    #mp1{
+        text-align:center;
+        font-size:35px;
+    }
+    #imghelp{
+        position:relative;
+        left:0px;
+        top:-160px;
+        z-index:100;
+        font:18px arial,sans-serif;
+        background:#f0f0f0;
+        margin-left:35px;
+        margin-right:35px;
+        padding-top:10px;
+        padding-bottom:10px;
+        border-radius:20px;
+    }
+    .selector{
+        margin:0;
+        padding:0;
+        cursor:pointer;
+        margin-bottom:-5px;
+    }
+    #outdiv
+    {
+        width:320px;
+        height:240px;
+        border: solid;
+        border-width: 3px 3px 3px 3px;
+    }
+    #result{
+        border: solid;
+        border-width: 1px 1px 1px 1px;
+        padding:20px;
+        width:70%;
+    }
+    
+    /*ul{
+        margin-bottom:0;
+        margin-right:40px;
+    }
+    li{
+        display:inline;
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+        font-weight: bold;
+        border-right: 1px solid #333333;
+    }
+    li a{
+        text-decoration: none;
+        color: black;
+    }
+    
+    #footer a{
+        color: black;
+    }
+    .tsel{
+        padding:0;
+    }*/
+</style>
+<!--                  Fin JS Pagina      -->
+
+
+<div class="panel panel-default">
+<form class="cmxform" id="datos_a_consultar" action="#"/>
+    <fieldset>
+        <div class="panel-heading">
+            <legend>
+                El siguiente formulario permitir&aacute; buscar los datos personales
+        del usuario. Por favor ingrese los datos solicitados para realizar la 
+        consulta y despu&eacute;s haga clic en el bot&oacute;n "Buscar".
+            </legend>
+        </div>
+        <div class="panel-body">
+            <!--
+            <p>
+                <label for="curp">CURP</label>
+                <input id="curp" name="curp" type="text" class="form-control">
+            </p>
+            -->
+            <div id="mainbody">
+                <table class="tsel" border="0" width="100%">
+                    <tr>
+                    <td valign="top" align="center" width="50%">
+                    <table class="tsel" border="0">
+                        <tr>
+                        <td><img class="selector" id="webcamimg" src="http://www.webqr.com/vid.png" onclick="setwebcam()" align="left" /></td>
+                        <td><img class="selector" id="qrimg" src="http://www.webqr.com/cam.png" onclick="setimg()" align="right"/></td></tr>
+                        <tr><td colspan="2" align="center">
+                        <div id="outdiv">
+                        </div></td></tr>
+                    </table>
+                    </td>
+                    </tr>
+                    <tr><td colspan="3" align="center">
+                    <img src="http://www.webqr.com/down.png"/>
+                    </td></tr>
+                    <tr><td colspan="3" align="center">
+                    <div id="result">
+                        <label for="curp">CURP</label>
+                        <input id="curp" name="curp" type="text" class="form-control">
+                    </div>
+                    </td></tr>
+                </table>
+                <canvas id="qr-canvas" width="800" height="600"></canvas>
+                <script type="text/javascript">load();</script>
+            </div>
+            <p>
+                <input id="submit" type="submit" value="Buscar" class="btn btn-default">
+            </p>
+        </div>
+    </fieldset>
+</form>
+<script>
+    $("#datos_a_consultar").validate({
+            rules: {
+                curp: {
+                    required: true,
+                    rangelength: [18, 18]
+                }
+            },
+            messages: {
+                curp: {
+                    required: "Este campo es obligatorio",
+                    rangelength: 
+                        "Introduzca un CURP v&aacute;lido de 18 caracteres"
+                }
+            }
+        });
+</script>
+<div id="content" class="panel-body">
+</div>
+</div>
+
+<?include 'footer.php'; ?>

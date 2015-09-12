@@ -1,0 +1,229 @@
+<?include 'header.php';?>
+
+<!---                  	CSS Template     -->
+<link href="../src/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../src/dist/css/sb-admin-2.css" rel="stylesheet">
+<link href="../src/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<!--              		Fin Css template  -->
+
+<!--                    Comienso pagina   -->
+<h1 class="page-header">Inicio</h1>
+
+<script>
+    $( function() {
+        $("#datos_a_consultar").submit( function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: "POST",
+                url: "http://majestics.bugs3.com/sif/class/procesarConsulta.php",
+                data: formData,
+                success: function(response){
+                    //console.log(response);
+                    $("#content").html(response);
+                }
+            });
+        })
+    });
+</script>
+<script type="text/javascript" src="http://majestics.bugs3.com/src/js/llqrcode.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="http://majestics.bugs3.com/src/js/rfc.js"></script>
+<script type="text/javascript" src="http://majestics.bugs3.com/src/js/webqr.js"></script>
+<style type="text/css">
+    img{
+        border:0;
+    }
+    #main{
+        margin: 15px auto;
+        background:white;
+        overflow: auto;
+        width: 100%;
+    }
+    #mainbody{
+        background: white;
+        width:100%;
+        display:none;
+    }
+    #v{
+        width:320px;
+        height:240px;
+    }
+    #qr-canvas{
+        display:none;
+    }
+    #qrfile{
+        width:320px;
+        height:240px;
+    }
+    #mp1{
+        text-align:center;
+        font-size:35px;
+    }
+    #imghelp{
+        position:relative;
+        left:0px;
+        top:-160px;
+        z-index:100;
+        font:18px arial,sans-serif;
+        background:#f0f0f0;
+        margin-left:35px;
+        margin-right:35px;
+        padding-top:10px;
+        padding-bottom:10px;
+        border-radius:20px;
+    }
+    .selector{
+        margin:0;
+        padding:0;
+        cursor:pointer;
+        margin-bottom:-5px;
+    }
+    #outdiv
+    {
+        width:320px;
+        height:240px;
+        border: solid;
+        border-width: 3px 3px 3px 3px;
+    }
+    #result{
+        border: solid;
+        border-width: 1px 1px 1px 1px;
+        padding:20px;
+        width:70%;
+    }
+</style>
+
+    <form class="cmxform" id="rfcForm" method="post" action="class/rfcCreate.php">
+        <fieldset>
+            <div class="panel-heading">
+                <legend>Complete sus datos</legend>
+            </div>
+            <div class="panel-body">
+                <div id="mainbody">
+                <table class="tsel" border="0" width="100%">
+                    <tr>
+                    <td valign="top" align="center" width="50%">
+                    <table class="tsel" border="0">
+                        <tr>
+                        <td><img class="selector" id="webcamimg" src="http://www.webqr.com/vid.png" onclick="setwebcam()" align="left" /></td>
+                        <td><img class="selector" id="qrimg" src="http://www.webqr.com/cam.png" onclick="setimg()" align="right"/></td></tr>
+                        <tr><td colspan="2" align="center">
+                        <div id="outdiv">
+                        </div></td></tr>
+                    </table>
+                    </td>
+                    </tr>
+                    <tr><td colspan="3" align="center">
+                    <img src="http://www.webqr.com/down.png"/>
+                    </td></tr>
+                    <tr><td colspan="3" align="center">
+                    <div id="result">
+                        <label for="curp">CURP</label>
+                        <input id="curp" name="curp" type="text" readonly>
+                    </div>
+                    </td></tr>
+                </table>
+                <canvas id="qr-canvas" width="800" height="600"></canvas>
+                <script type="text/javascript">load1();</script>
+            </div>
+                <p>
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" name="nombre" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="ap_pat">Apellido Paterno</label>
+                    <input id="ap_pat" name="ap_pat" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="ap_mat">Apellido Materno</label>
+                    <input id="ap_mat" name="ap_mat" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="estado">Estado</label>
+                    <input id="estado" name="estado" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="region">Regi&oacute;n</label>
+                    <input id="region" name="region" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="anio">A&ntilde;o</label>
+                    <input id="anio" name="anio" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="mes">Mes</label>
+                    <input id="mes" name="mes" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="dia">D&iacute;a</label>
+                    <input id="dia" name="dia" type="text" readonly>
+                </p>
+
+                
+                <p>
+                    <label for="rfc">RFC</label>
+                    <input id="rfc" name="rfc" type="text" readonly>
+                </p>
+
+                <p>
+                    <label for="domicilio">Domicilio</label>
+                    <input id="domicilio" name="domicilio" type="text">
+                </p>
+
+                <p>
+                    <label for="tel">Tel&eacute;fono</label>
+                    <input id="tel" name="tel" type="text" >
+                </p>
+
+                <p>
+                    <label for="regimen">R&eacute;gimen</label>
+                    <select id="regimen" name="regimen">
+                        <option value="Asalariados">Asalariados</option>
+                        <option value="Honorarios">Honorarios por servicios profesionales</option>
+                        <option value="Arrendamiento">Arrendamiento de inmuebles</option>
+                        <option value="Empresariales">Actividades Empresariales</option>
+                        <option value="Fiscal">Incorporaci&oacute;n Fiscal</option>
+                    </select>
+                </p>
+
+                <p>
+                    <label for="estado_civil">Estado Civil</label>
+                    <select id="estado_civil" name="estado_civil">
+                        <option value="Soltero">Soltero</option>
+                        <option value="Casado">Casado</option>
+                        <option value="Divorciado">Divorciado</option>
+                        <option value="Viudo">Viudo</option>
+                    </select>
+                </p>
+                <input id="sendData" type="submit" value="Dar de Alta" >
+            </div>
+        </fieldset>
+    </form>
+
+<!--                    FInal pagina     -->
+
+
+<!--      	 			JS Template      -->
+<script src="../src/dist/js/sb-admin-2.js"></script>
+<script src="../src/js/jquery-2.1.4.min.js"></script>
+<script src="../src/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!--                 Fin JS Template      -->
+
+<!--                  JS Pagina 		  -->
+<script type="text/javascript">
+$('.navbar-default.sidebar').height($('#page-wrapper').height()); // JS para que la barra izquierda sea igual al tamaño  de la pagina
+
+
+</script>
+<!--                  Fin JS Pagina      -->
+
+
+<?include 'footer.php'; ?>

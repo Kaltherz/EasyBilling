@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<title>Captura de datos</title>
+		<link rel="stylesheet" href="css/style.css">
+		<script src="jquery/jquery-2.1.4.js"></script>
+		<script src="jquery/jquery-validation-1.14.0/dist/jquery.validate.js"></script>
+		<script src="jquery/jquery-validation-1.14.0/dist/localization/messages_es.js"></script>
+		 <meta charset="UTF-8"> 
+	</head>
+	<body>
+		<h1>Formulario de Captura de datos</h1>
+		<form class="cmxform" id="dataForm" method="get" action="index.html">
+			<fieldset>
+				<legend>Introduzca la información requerida para realizar su registro</legend>
+				<p>
+					<label for="name">Nombre</label>
+					<input id="name" name="name" type="text" required>
+				</p>
+
+				<p>
+					<label for="lastnamef">Apellido Paterno</label>
+					<input id="lastnamef" name="lastnamef" type="text" required>
+				</p>
+
+				<p>
+					<label for="lastnamem">Apellido Materno</label>
+					<input id="lastnamem" name="lastnamem" type="text" required>
+				</p>
+
+				<p>
+					<label for="state">Estado</label>
+					<input id="state" name="state" type="text" required>
+				</p>
+
+				<p>
+					<label for="city">Ciudad</label>
+					<input id="city" name="city" type="text" required>
+				</p>
+
+				<p>
+					<label for="birthdate">Fecha de nacimiento</label>
+					<input id="birthdate" name="birthdate" type="text">
+				</p>
+
+				<p>
+					<label for="curp">CURP</label>
+					<input id="curp" name="curp" type="text">
+				</p>
+				<input type="submit" value="Enviar datos">
+			<fieldset>			
+		</form>
+		<script>
+			jQuery.validator.setDefaults({
+  				debug: true,
+  				success: "valid"
+			});
+			$("#dataForm").validate({
+				rules: {
+					birthdate: {
+						required: true,
+						dateISO: true
+					},
+					curp: {
+						required: true,
+						rangelength: [18, 18]
+					}
+				},
+				messages: {
+					birthdate: {
+						dateISO: "Introduzca una fecha con el formato AAAA-MM-DD"
+					},
+					curp: {
+						rangelength: "Introduzca un CURP válido de 18 caracteres"
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

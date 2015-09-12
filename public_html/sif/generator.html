@@ -1,0 +1,150 @@
+<html>
+	<head>
+		<title>Captura de Datos</title>
+		<script src="http://majestics.bugs3.com/src/js/jquery-2.1.4.js"></script>
+		<script src="http://majestics.bugs3.com/src/jquery-validation-1.14.0/dist/jquery.validate.js"></script>
+		<script src="http://majestics.bugs3.com/src/jquery-validation-1.14.0/dist/localization/messages_es.js"></script>
+		<script src="http://majestics.bugs3.com/src/jquery-qrcode-0.12.0/jquery.qrcode-0.12.0.js"></script>
+		<script src="http://majestics.bugs3.com/src/js/curp.js"></script>
+		<meta charset="UTF-8" />
+		<link href="http://majestics.bugs3.com/src/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	    <link href="http://majestics.bugs3.com/src/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet" type="text/css">
+	    <link href="http://majestics.bugs3.com/src/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css">
+	    <link href="http://majestics.bugs3.com/src/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<h1>Formulario de Captura de datos</h1>
+		<form class="cmxform" id="dataForm" method="post" action="http://majestics.bugs3.com/sif/class/register.php">
+			<fieldset id="formWrapper">
+				<div class="panel-heading">
+				<legend>Introduzca la información requerida para realizar su registro</legend>
+			</div>
+			<div class="panel-body">
+				<p>
+					<label for="name">Nombre</label>
+					<input id="name" name="name" type="text" required>
+				</p>
+
+				<p>
+					<label for="lastnamef">Apellido Paterno</label>
+					<input id="lastnamef" name="lastnamef" type="text" required>
+				</p>
+
+				<p>
+					<label for="lastnamem">Apellido Materno</label>
+					<input id="lastnamem" name="lastnamem" type="text" required>
+				</p>
+
+				<p>
+					<label for="gender">Sexo</label>
+					<select id="gender" name = "gender">
+						<option value ="H">Masculino</option>
+						<option value ="M">Femenino</option>
+					</select>
+				</p>
+
+				<p>
+					<label for="state">Estado</label>
+					<select id="state" name="state">
+						<option value="Aguascalientes">Aguascalientes</option>
+						<option value="Baja California">Baja California</option>
+						<option value="Baja California Sur">Baja California Sur</option>
+						<option value="Campeche">Campeche</option>
+						<option value="Chiapas">Chiapas</option>
+						<option value="Chihuahua">Chihuahua</option>
+						<option value="Coahuila">Coahuila</option>
+						<option value="Colima">Colima</option>
+						<option value="Distrito Federal">Distrito Federal</option>
+						<option value="Durango">Durango</option>
+						<option value="Guanajuato">Guanajuato</option>
+						<option value="Guerrero">Guerrero</option>
+						<option value="Hidalgo">Hidalgo</option>
+						<option value="Jalisco">Jalisco</option>
+						<option value="Mexico">Mexico</option>
+						<option value="Michoacan">Michoacan</option>
+						<option value="Morelos">Morelos</option>
+						<option value="Nayarit">Nayarit</option>
+						<option value="Nuevo Leon">Nuevo Leon</option>
+						<option value="Oaxaca">Oaxaca</option>
+						<option value="Puebla">Puebla</option>
+						<option value="Queretaro">Queretaro</option>
+						<option value="Quintana Roo">Quintana Roo</option>
+						<option value="San Luis Potosi">San Luis Potosi</option>
+						<option value="Sinaloa">Sinaloa</option>
+						<option value="Sonora">Sonora</option>
+						<option value="Tabasco">Tabasco</option>
+						<option value="Tamaulipas">Tamaulipas</option>
+						<option value="Tlaxcala">Tlaxcala</option>
+						<option value="Veracruz">Veracruz</option>
+						<option value="Yucatán">Yucatán</option>
+						<option value="Zacatecas">Zacatecas</option>
+						<option value="Extranjero">Nacido en el Extranjero</option>
+					</select>
+				</p>
+
+				<p>
+					<label for="city">Ciudad</label>
+					<input id="city" name="city" type="text" required>
+				</p>
+
+				<p>
+					<label for="birthdate">Fecha de nacimiento</label>
+					<input id="birthdate" name="birthdate" type="text">
+				</p>
+
+				<p>
+					<label for="curp">CURP</label>
+					<input id="curp" name="curp" type="text" readonly>
+				</p>
+				<input id="generate" type="button" value="Generar CURP + QR">
+				<input id="sendData" type="submit" value="Enviar Datos" disabled="true">
+			</div>
+			</fieldset>			
+		</form>
+		<canvas class="qrcode" width="300" height="300" style="margin: 15px;"></canvas>
+		<div id="secretdiv"></div>
+		<script>
+			$("#dataForm").validate({
+				rules: {
+					birthdate: {
+						required: true,
+						dateISO: true
+					},
+					curp: {
+						required: true,
+						rangelength: [18, 18]
+					}
+				},
+				messages: {
+					birthdate: {
+						dateISO: "Introduzca una fecha con el formato AAAA-MM-DD"
+					},
+					curp: {
+						rangelength: "Introduzca un CURP válido de 18 caracteres"
+					}
+				}
+			});
+			$("#generate").click(function(){
+				var curp = curpGenerator($("#name").val(), $("#lastnamef").val(), $("#lastnamem").val(), $("#birthdate").val(), $("#gender").val(), $("#state").val(), "09");
+				if(curp != ""){
+					$("#curp").val(curp);
+					var qr = new Object();
+					qr.name = $("#name").val();
+					qr.lastnamef = $("#lastnamef").val();
+					qr.lastnamem = $("#lastnamem").val();
+					qr.state = $("#state").val();
+					qr.city = $("#city").val();
+					qr.birthdate = $("#birthdate").val();
+					qr.curp = $("#curp").val();
+					$(".qrcode").qrcode({
+						"size": 300,
+						"fill": "#000",
+						"background": "#FFF",
+						"text": JSON.stringify(qr)
+					});
+					$("#sendData").prop('disabled', false);
+				}
+			});
+		</script>
+	</body>
+</html>
